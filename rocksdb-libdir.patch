@@ -1,0 +1,31 @@
+--- rocksdb-rocksdb-3.5.1/Makefile.orig	2014-10-08 19:21:10.000000000 +0200
++++ rocksdb-rocksdb-3.5.1/Makefile	2014-10-18 22:15:15.521010930 +0200
+@@ -51,22 +51,23 @@
+ #-------------------------------------------------
+ # make install related stuff
+ INSTALL_PATH ?= /usr/local
++INSTALL_LIBDIR ?= $(INSTALL_PATH)/lib
+ 
+ uninstall:
+ 	@rm -rf $(INSTALL_PATH)/include/rocksdb
+-	@rm -rf $(INSTALL_PATH)/lib/$(LIBRARY)
+-	@rm -rf $(INSTALL_PATH)/lib/$(SHARED)
++	@rm -rf $(INSTALL_LIBDIR)/$(LIBRARY)
++	@rm -rf $(INSTALL_LIBDIR)/$(SHARED)
+ 
+ install:
+-	@install -d $(INSTALL_PATH)/lib
++	@install -d $(INSTALL_LIBDIR)
+ 	@for header_dir in `find "include/rocksdb" -type d`; do \
+ 		install -d $(INSTALL_PATH)/$$header_dir; \
+ 	done
+ 	@for header in `find "include/rocksdb" -type f -name *.h`; do \
+ 		install -C -m 644 $$header $(INSTALL_PATH)/$$header; \
+ 	done
+-	@[ ! -e $(LIBRARY) ] || install -C -m 644 $(LIBRARY) $(INSTALL_PATH)/lib
+-	@[ ! -e $(SHARED) ] || install -C -m 644 $(SHARED) $(INSTALL_PATH)/lib
++	@[ ! -e $(LIBRARY) ] || install -C -m 644 $(LIBRARY) $(INSTALL_LIBDIR)
++	@[ ! -e $(SHARED) ] || install -C -m 755 $(SHARED) $(INSTALL_LIBDIR)
+ #-------------------------------------------------
+ 
+ WARNING_FLAGS = -Wall -Werror -Wsign-compare
