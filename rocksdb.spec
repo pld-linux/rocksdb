@@ -11,6 +11,9 @@ Patch0:		%{name}-libdir.patch
 URL:		http://rocksdb.org/
 BuildRequires:	bzip2-devel
 BuildRequires:	gflags-devel
+%ifarch i386 i486
+BuildRequires:	libatomic-devel
+%endif
 BuildRequires:	libstdc++-devel >= 6:4.7
 BuildRequires:	libtcmalloc-devel
 BuildRequires:	lz4-devel
@@ -54,6 +57,9 @@ Statyczna biblioteka RocksDB.
 %patch0 -p1
 
 %build
+%ifarch i386 i486
+PLATFORM_LDFLAGS="-latomic" \
+%endif
 %{__make} all shared_lib \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
