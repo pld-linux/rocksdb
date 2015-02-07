@@ -1,12 +1,12 @@
 Summary:	RocksDB: A Persistent Key-Value Store for Flash and RAM Storage
 Summary(pl.UTF-8):	RocksDB - trwała baza danych klucz-wartość dla pamięci Flash i RAM
 Name:		rocksdb
-Version:	3.8
+Version:	3.9
 Release:	1
 License:	BSD
 Group:		Libraries
 Source0:	https://github.com/facebook/rocksdb/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	8fe3f43dc1f6d0d31cbda47812110d77
+# Source0-md5:	395a614e0e9ef67b40714d819379f4c0
 Patch0:		%{name}-libdir.patch
 URL:		http://rocksdb.org/
 BuildRequires:	bzip2-devel
