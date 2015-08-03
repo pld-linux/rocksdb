@@ -1,12 +1,12 @@
 Summary:	RocksDB: A Persistent Key-Value Store for Flash and RAM Storage
 Summary(pl.UTF-8):	RocksDB - trwała baza danych klucz-wartość dla pamięci Flash i RAM
 Name:		rocksdb
-Version:	3.9.1
+Version:	3.10.2
 Release:	1
 License:	BSD
 Group:		Libraries
 Source0:	https://github.com/facebook/rocksdb/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	b759d264fda5f66001b092d6be311c58
+# Source0-md5:	6bdc1defb0a0d8e9e3cb11bfc6e795ef
 Patch0:		%{name}-libdir.patch
 URL:		http://rocksdb.org/
 BuildRequires:	bzip2-devel
@@ -61,6 +61,7 @@ Statyczna biblioteka RocksDB.
 PLATFORM_LDFLAGS="-latomic" \
 %endif
 %{__make} all shared_lib \
+	AM_DEFAULT_VERBOSITY=1 \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
 	OPT="%{rpmcflags} %{!?debug:-DNDEBUG}" \
