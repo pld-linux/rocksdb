@@ -1,3 +1,8 @@
+#
+# Conditional build:
+%bcond_with	tests		# build with tests
+%bcond_without	static_libs	# don't build static libraries
+
 Summary:	RocksDB: A Persistent Key-Value Store for Flash and RAM Storage
 Summary(pl.UTF-8):	RocksDB - trwała baza danych klucz-wartość dla pamięci Flash i RAM
 Name:		rocksdb
@@ -8,6 +13,7 @@ Group:		Libraries
 Source0:	https://github.com/facebook/rocksdb/archive/%{name}-%{version}.tar.gz
 # Source0-md5:	6bdc1defb0a0d8e9e3cb11bfc6e795ef
 Patch0:		%{name}-libdir.patch
+Patch1:		make-programs.patch
 URL:		http://rocksdb.org/
 BuildRequires:	bzip2-devel
 BuildRequires:	gflags-devel
@@ -55,12 +61,13 @@ Statyczna biblioteka RocksDB.
 %prep
 %setup -q -n %{name}-%{name}-%{version}
 %patch0 -p1
+%patch1 -p1
 
 %build
 %ifarch i386 i486
 PLATFORM_LDFLAGS="-latomic" \
 %endif
-%{__make} all shared_lib \
+%{__make} shared_lib %{?with_static_libs:static_lib} programs %{?with_tests:check} \
 	AM_DEFAULT_VERBOSITY=1 \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
@@ -69,7 +76,6 @@ PLATFORM_LDFLAGS="-latomic" \
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 %{__make} install \
 	INSTALL_PATH=$RPM_BUILD_ROOT%{_prefix} \
 	INSTALL_LIBDIR=$RPM_BUILD_ROOT%{_libdir} \
@@ -90,6 +96,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/*
 %{_includedir}/rocksdb
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/librocksdb.a
+%endif
