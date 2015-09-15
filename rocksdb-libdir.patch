@@ -1,6 +1,6 @@
---- rocksdb-rocksdb-3.10.2/Makefile~	2015-05-02 02:45:34.000000000 +0300
-+++ rocksdb-rocksdb-3.10.2/Makefile	2015-07-27 11:30:48.212446388 +0300
-@@ -117,22 +117,23 @@
+--- rocksdb-rocksdb-3.13.1/Makefile.orig	2015-09-14 21:39:12.629620988 +0200
++++ rocksdb-rocksdb-3.13.1/Makefile	2015-09-15 15:38:46.103569369 +0200
+@@ -928,17 +928,18 @@
  #-------------------------------------------------
  # make install related stuff
  INSTALL_PATH ?= /usr/local
@@ -9,23 +9,38 @@
  uninstall:
  	rm -rf $(INSTALL_PATH)/include/rocksdb \
 -	  $(INSTALL_PATH)/lib/$(LIBRARY) \
--	  $(INSTALL_PATH)/lib/$(SHARED)
+-	  $(INSTALL_PATH)/lib/$(SHARED4) \
+-	  $(INSTALL_PATH)/lib/$(SHARED3) \
+-	  $(INSTALL_PATH)/lib/$(SHARED2) \
+-	  $(INSTALL_PATH)/lib/$(SHARED1)
 +	  $(INSTALL_LIBDIR)/$(LIBRARY) \
-+	  $(INSTALL_LIBDIR)/$(SHARED)
++	  $(INSTALL_LIBDIR)/$(SHARED4) \
++	  $(INSTALL_LIBDIR)/$(SHARED3) \
++	  $(INSTALL_LIBDIR)/$(SHARED2) \
++	  $(INSTALL_LIBDIR)/$(SHARED1)
  
- install:
+ install-headers:
 -	install -d $(INSTALL_PATH)/lib
 +	install -d $(INSTALL_LIBDIR)
  	for header_dir in `find "include/rocksdb" -type d`; do \
  		install -d $(INSTALL_PATH)/$$header_dir; \
  	done
- 	for header in `find "include/rocksdb" -type f -name *.h`; do \
- 		install -C -m 644 $$header $(INSTALL_PATH)/$$header; \
+@@ -947,13 +948,13 @@
  	done
--	[ ! -e $(LIBRARY) ] || install -C -m 644 $(LIBRARY) $(INSTALL_PATH)/lib
--	[ ! -e $(SHARED) ] || install -C -m 644 $(SHARED) $(INSTALL_PATH)/lib
-+	[ ! -e $(LIBRARY) ] || install -C -m 644 $(LIBRARY) $(INSTALL_LIBDIR)
-+	[ ! -e $(SHARED) ] || install -C -m 644 $(SHARED) $(INSTALL_LIBDIR)
- #-------------------------------------------------
  
- WARNING_FLAGS = -W -Wextra -Wall -Wsign-compare -Wshadow \
+ install-static: install-headers $(LIBRARY)
+-	install -C -m 755 $(LIBRARY) $(INSTALL_PATH)/lib
++	install -C -m 755 $(LIBRARY) $(INSTALL_LIBDIR)
+ 
+ install-shared: install-headers $(SHARED4)
+-	install -C -m 755 $(SHARED4) $(INSTALL_PATH)/lib && \
+-		ln -fs $(SHARED4) $(INSTALL_PATH)/lib/$(SHARED3) && \
+-		ln -fs $(SHARED4) $(INSTALL_PATH)/lib/$(SHARED2) && \
+-		ln -fs $(SHARED4) $(INSTALL_PATH)/lib/$(SHARED1)
++	install -C -m 755 $(SHARED4) $(INSTALL_LIBDIR) && \
++		ln -fs $(SHARED4) $(INSTALL_LIBDIR)/$(SHARED3) && \
++		ln -fs $(SHARED4) $(INSTALL_LIBDIR)/$(SHARED2) && \
++		ln -fs $(SHARED4) $(INSTALL_LIBDIR)/$(SHARED1)
+ 
+ # install static by default + install shared if it exists
+ install: install-static

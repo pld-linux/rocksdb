@@ -6,12 +6,12 @@
 Summary:	RocksDB: A Persistent Key-Value Store for Flash and RAM Storage
 Summary(pl.UTF-8):	RocksDB - trwała baza danych klucz-wartość dla pamięci Flash i RAM
 Name:		rocksdb
-Version:	3.10.2
+Version:	3.13.1
 Release:	1
 License:	BSD
 Group:		Libraries
 Source0:	https://github.com/facebook/rocksdb/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	6bdc1defb0a0d8e9e3cb11bfc6e795ef
+# Source0-md5:	2e0a6482ce1756bfdff73a0e09006a92
 Patch0:		%{name}-libdir.patch
 Patch1:		make-programs.patch
 URL:		http://rocksdb.org/
@@ -26,6 +26,9 @@ BuildRequires:	lz4-devel
 BuildRequires:	snappy-devel
 BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+# std::__once_call, std::__once_callable non-function symbols
+%define		skip_post_check_so	librocksdb.so.*
 
 %description
 RocksDB is a Persistent Key-Value Store for Flash and RAM Storage.
@@ -78,7 +81,10 @@ PLATFORM_LDFLAGS="-latomic" \
 rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	INSTALL_PATH=$RPM_BUILD_ROOT%{_prefix} \
-	INSTALL_LIBDIR=$RPM_BUILD_ROOT%{_libdir} \
+	INSTALL_LIBDIR=$RPM_BUILD_ROOT%{_libdir}
+
+# reduntant symlink
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/librocksdb.so.3
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -89,11 +95,13 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc HISTORY.md LICENSE PATENTS README.md ROCKSDB_LITE.md
-%attr(755,root,root) %{_libdir}/librocksdb.so
+%attr(755,root,root) %{_libdir}/librocksdb.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.3.13
 
 %files devel
 %defattr(644,root,root,755)
 %doc doc/*
+%attr(755,root,root) %{_libdir}/librocksdb.so
 %{_includedir}/rocksdb
 
 %if %{with static_libs}
