@@ -1,0 +1,11 @@
+--- rocksdb-rocksdb-4.4.1/build_tools/build_detect_platform.orig	2016-02-19 00:13:33.000000000 +0100
++++ rocksdb-rocksdb-4.4.1/build_tools/build_detect_platform	2016-04-09 19:06:31.474404792 +0200
+@@ -286,7 +286,7 @@
+     # Test whether numa is available
+     $CXX $CFLAGS -x c++ - -o /dev/null -lnuma 2>/dev/null  <<EOF
+       #include <numa.h>
+-      #inlcude <numaif.h>
++      #include <numaif.h>
+       int main() {}
+ EOF
+     if [ "$?" = 0 ]; then

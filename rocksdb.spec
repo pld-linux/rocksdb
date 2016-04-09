@@ -1,3 +1,4 @@
+# TODO: hdfs/java
 #
 # Conditional build:
 %bcond_with	tests		# build with tests
@@ -6,25 +7,30 @@
 Summary:	RocksDB: A Persistent Key-Value Store for Flash and RAM Storage
 Summary(pl.UTF-8):	RocksDB - trwała baza danych klucz-wartość dla pamięci Flash i RAM
 Name:		rocksdb
-Version:	3.13.1
+Version:	4.4.1
 Release:	1
 License:	BSD
 Group:		Libraries
+#Source0Download: https://github.com/facebook/rocksdb/releases
 Source0:	https://github.com/facebook/rocksdb/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	2e0a6482ce1756bfdff73a0e09006a92
+# Source0-md5:	ad38c27c09cea873296bfba68594335c
 Patch0:		%{name}-libdir.patch
 Patch1:		make-programs.patch
+Patch2:		%{name}-numa.patch
 URL:		http://rocksdb.org/
 BuildRequires:	bzip2-devel
 BuildRequires:	gflags-devel
+# libtcmalloc also supported, but jemalloc is preferred
+BuildRequires:	jemalloc-devel
 %ifarch i386 i486
 BuildRequires:	libatomic-devel
 %endif
 BuildRequires:	libstdc++-devel >= 6:4.7
-BuildRequires:	libtcmalloc-devel
 BuildRequires:	lz4-devel
+BuildRequires:	numactl-devel
 BuildRequires:	snappy-devel
 BuildRequires:	zlib-devel
+BuildRequires:	zstd-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # std::__once_call, std::__once_callable non-function symbols
@@ -65,6 +71,7 @@ Statyczna biblioteka RocksDB.
 %setup -q -n %{name}-%{name}-%{version}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %ifarch i386 i486
@@ -75,16 +82,20 @@ PLATFORM_LDFLAGS="-latomic" \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
 	OPT="%{rpmcflags} %{!?debug:-DNDEBUG}" \
+	PORTABLE=1 \
+	%{!?with_debug:DEBUG_LEVEL=0}
 	WARNING_FLAGS="%{rpmcppflags} -Wall"
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
 %{__make} install \
+	%{!?with_debug:DEBUG_LEVEL=0} \
 	INSTALL_PATH=$RPM_BUILD_ROOT%{_prefix} \
 	INSTALL_LIBDIR=$RPM_BUILD_ROOT%{_libdir}
 
 # reduntant symlink
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/librocksdb.so.3
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/librocksdb.so.4
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -96,7 +107,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc HISTORY.md LICENSE PATENTS README.md ROCKSDB_LITE.md
 %attr(755,root,root) %{_libdir}/librocksdb.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.3.13
+%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.4.4
 
 %files devel
 %defattr(644,root,root,755)
