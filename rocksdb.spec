@@ -7,16 +7,17 @@
 Summary:	RocksDB: A Persistent Key-Value Store for Flash and RAM Storage
 Summary(pl.UTF-8):	RocksDB - trwała baza danych klucz-wartość dla pamięci Flash i RAM
 Name:		rocksdb
-Version:	4.4.1
+Version:	4.9
 Release:	1
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/facebook/rocksdb/releases
 Source0:	https://github.com/facebook/rocksdb/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	ad38c27c09cea873296bfba68594335c
+# Source0-md5:	e23ab7b76faaa1fc4c96b86732b16448
 Patch0:		%{name}-libdir.patch
 Patch1:		make-programs.patch
 Patch2:		%{name}-numa.patch
+Patch3:		%{name}-jemalloc.patch
 URL:		http://rocksdb.org/
 BuildRequires:	bzip2-devel
 BuildRequires:	gflags-devel
@@ -72,6 +73,7 @@ Statyczna biblioteka RocksDB.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %ifarch i386 i486
@@ -107,7 +109,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc HISTORY.md LICENSE PATENTS README.md ROCKSDB_LITE.md
 %attr(755,root,root) %{_libdir}/librocksdb.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.4.4
+%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.4.9
 
 %files devel
 %defattr(644,root,root,755)
