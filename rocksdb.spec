@@ -7,17 +7,17 @@
 Summary:	RocksDB: A Persistent Key-Value Store for Flash and RAM Storage
 Summary(pl.UTF-8):	RocksDB - trwała baza danych klucz-wartość dla pamięci Flash i RAM
 Name:		rocksdb
-Version:	4.9
+Version:	4.13.5
 Release:	1
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/facebook/rocksdb/releases
 Source0:	https://github.com/facebook/rocksdb/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	e23ab7b76faaa1fc4c96b86732b16448
+# Source0-md5:	f94191cf37221c4541dfb4d7f544651e
 Patch0:		%{name}-libdir.patch
 Patch1:		make-programs.patch
-Patch2:		%{name}-numa.patch
-Patch3:		%{name}-jemalloc.patch
+Patch2:		%{name}-jemalloc.patch
+Patch3:		%{name}-detect-flags.patch
 URL:		http://rocksdb.org/
 BuildRequires:	bzip2-devel
 BuildRequires:	gflags-devel
@@ -27,11 +27,11 @@ BuildRequires:	jemalloc-devel
 BuildRequires:	libatomic-devel
 %endif
 BuildRequires:	libstdc++-devel >= 6:4.7
-BuildRequires:	lz4-devel
+BuildRequires:	lz4-devel >= 1:1.7
 BuildRequires:	numactl-devel
 BuildRequires:	snappy-devel
 BuildRequires:	zlib-devel
-BuildRequires:	zstd-devel
+BuildRequires:	zstd-devel >= 0.8.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # std::__once_call, std::__once_callable non-function symbols
@@ -83,6 +83,7 @@ PLATFORM_LDFLAGS="-latomic" \
 	AM_DEFAULT_VERBOSITY=1 \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
+	EXTRA_CFLAGS="$(pkg-config --cflags liblz4)" \
 	OPT="%{rpmcflags} %{!?debug:-DNDEBUG}" \
 	PORTABLE=1 \
 	%{!?with_debug:DEBUG_LEVEL=0}
@@ -107,13 +108,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc HISTORY.md LICENSE PATENTS README.md ROCKSDB_LITE.md
+%doc AUTHORS DEFAULT_OPTIONS_HISTORY.md DUMP_FORMAT.md HISTORY.md LANGUAGE-BINDINGS.md LICENSE PATENTS README.md ROCKSDB_LITE.md USERS.md
 %attr(755,root,root) %{_libdir}/librocksdb.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.4.9
+%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.4.13
 
 %files devel
 %defattr(644,root,root,755)
-%doc doc/*
 %attr(755,root,root) %{_libdir}/librocksdb.so
 %{_includedir}/rocksdb
 
