@@ -7,13 +7,13 @@
 Summary:	RocksDB: A Persistent Key-Value Store for Flash and RAM Storage
 Summary(pl.UTF-8):	RocksDB - trwała baza danych klucz-wartość dla pamięci Flash i RAM
 Name:		rocksdb
-Version:	4.13.5
+Version:	5.2.1
 Release:	1
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/facebook/rocksdb/releases
 Source0:	https://github.com/facebook/rocksdb/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	f94191cf37221c4541dfb4d7f544651e
+# Source0-md5:	843b4360dbe3d3869c95d3001644dc41
 Patch0:		%{name}-libdir.patch
 Patch1:		make-programs.patch
 Patch2:		%{name}-jemalloc.patch
@@ -98,7 +98,7 @@ rm -rf $RPM_BUILD_ROOT
 	INSTALL_LIBDIR=$RPM_BUILD_ROOT%{_libdir}
 
 # reduntant symlink
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/librocksdb.so.4
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/librocksdb.so.5
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -110,7 +110,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS DEFAULT_OPTIONS_HISTORY.md DUMP_FORMAT.md HISTORY.md LANGUAGE-BINDINGS.md LICENSE PATENTS README.md ROCKSDB_LITE.md USERS.md
 %attr(755,root,root) %{_libdir}/librocksdb.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.4.13
+%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.5.2
 
 %files devel
 %defattr(644,root,root,755)
