@@ -29,13 +29,11 @@ BuildRequires:	libatomic-devel
 BuildRequires:	libstdc++-devel >= 6:4.7
 BuildRequires:	lz4-devel >= 1:1.7
 BuildRequires:	numactl-devel
+BuildRequires:	rpmbuild(macros) >= 1.734
 BuildRequires:	snappy-devel
 BuildRequires:	zlib-devel
 BuildRequires:	zstd-devel >= 0.8.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-# std::__once_call, std::__once_callable non-function symbols
-%define		skip_post_check_so	librocksdb.so.*
 
 %description
 RocksDB is a Persistent Key-Value Store for Flash and RAM Storage.
