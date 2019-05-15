@@ -3,23 +3,23 @@
 # Conditional build:
 %bcond_with	tests		# build with tests
 %bcond_without	static_libs	# don't build static libraries
+%bcond_without	tbb		# Threading Building Blocks support
 
 Summary:	RocksDB: A Persistent Key-Value Store for Flash and RAM Storage
 Summary(pl.UTF-8):	RocksDB - trwała baza danych klucz-wartość dla pamięci Flash i RAM
 Name:		rocksdb
-Version:	5.2.1
+Version:	6.0.2
 Release:	1
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/facebook/rocksdb/releases
-Source0:	https://github.com/facebook/rocksdb/archive/%{name}-%{version}.tar.gz
-# Source0-md5:	843b4360dbe3d3869c95d3001644dc41
+Source0:	https://github.com/facebook/rocksdb/archive/v%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	a8f2f594182e97a08629bcc66dfd3fa0
 Patch0:		%{name}-libdir.patch
 Patch1:		make-programs.patch
-Patch2:		%{name}-jemalloc.patch
-Patch3:		%{name}-detect-flags.patch
+Patch2:		%{name}-detect-flags.patch
 URL:		http://rocksdb.org/
-BuildRequires:	bzip2-devel
+BuildRequires:	bzip2-devel >= 1.0.6
 BuildRequires:	gflags-devel
 # libtcmalloc also supported, but jemalloc is preferred
 BuildRequires:	jemalloc-devel
@@ -27,12 +27,13 @@ BuildRequires:	jemalloc-devel
 BuildRequires:	libatomic-devel
 %endif
 BuildRequires:	libstdc++-devel >= 6:4.7
-BuildRequires:	lz4-devel >= 1:1.7
+BuildRequires:	lz4-devel >= 1:1.8.3
 BuildRequires:	numactl-devel
 BuildRequires:	rpmbuild(macros) >= 1.734
-BuildRequires:	snappy-devel
-BuildRequires:	zlib-devel
-BuildRequires:	zstd-devel >= 0.8.0
+BuildRequires:	snappy-devel >= 1.1.7
+%{?with_tbb:BuildRequires:	tbb-devel}
+BuildRequires:	zlib-devel >= 1.2.11
+BuildRequires:	zstd-devel >= 1.3.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -67,11 +68,10 @@ Static RocksDB library.
 Statyczna biblioteka RocksDB.
 
 %prep
-%setup -q -n %{name}-%{name}-%{version}
+%setup -q
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 %build
 %ifarch i386 i486
@@ -81,10 +81,11 @@ PLATFORM_LDFLAGS="-latomic" \
 	AM_DEFAULT_VERBOSITY=1 \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
+	%{!?with_debug:DEBUG_LEVEL=0}
 	EXTRA_CFLAGS="$(pkg-config --cflags liblz4)" \
 	OPT="%{rpmcflags} %{!?debug:-DNDEBUG}" \
 	PORTABLE=1 \
-	%{!?with_debug:DEBUG_LEVEL=0}
+	%{!?with_tbb:ROCKSDB_DISABLE_TBB=1} \
 	WARNING_FLAGS="%{rpmcppflags} -Wall"
 
 %install
@@ -96,7 +97,7 @@ rm -rf $RPM_BUILD_ROOT
 	INSTALL_LIBDIR=$RPM_BUILD_ROOT%{_libdir}
 
 # reduntant symlink
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/librocksdb.so.5
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/librocksdb.so.6
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -106,9 +107,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS DEFAULT_OPTIONS_HISTORY.md DUMP_FORMAT.md HISTORY.md LANGUAGE-BINDINGS.md LICENSE PATENTS README.md ROCKSDB_LITE.md USERS.md
+%doc AUTHORS DEFAULT_OPTIONS_HISTORY.md DUMP_FORMAT.md HISTORY.md LANGUAGE-BINDINGS.md LICENSE.leveldb README.md ROCKSDB_LITE.md USERS.md
 %attr(755,root,root) %{_libdir}/librocksdb.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.5.2
+%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.6.0
 
 %files devel
 %defattr(644,root,root,755)

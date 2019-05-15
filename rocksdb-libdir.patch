@@ -1,6 +1,6 @@
---- rocksdb-rocksdb-3.13.1/Makefile.orig	2015-09-14 21:39:12.629620988 +0200
-+++ rocksdb-rocksdb-3.13.1/Makefile	2015-09-15 15:38:46.103569369 +0200
-@@ -928,17 +928,18 @@
+--- rocksdb-6.0.2/Makefile.orig	2019-04-24 00:20:22.000000000 +0200
++++ rocksdb-6.0.2/Makefile	2019-04-28 10:13:08.180185516 +0200
+@@ -1574,17 +1574,18 @@
  #-------------------------------------------------
  # make install related stuff
  INSTALL_PATH ?= /usr/local
@@ -22,10 +22,10 @@
  install-headers:
 -	install -d $(INSTALL_PATH)/lib
 +	install -d $(INSTALL_LIBDIR)
- 	for header_dir in `find "include/rocksdb" -type d`; do \
+ 	for header_dir in `$(FIND) "include/rocksdb" -type d`; do \
  		install -d $(INSTALL_PATH)/$$header_dir; \
  	done
-@@ -947,13 +948,13 @@
+@@ -1593,13 +1594,13 @@
  	done
  
  install-static: install-headers $(LIBRARY)
