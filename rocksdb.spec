@@ -9,7 +9,7 @@ Summary:	RocksDB: A Persistent Key-Value Store for Flash and RAM Storage
 Summary(pl.UTF-8):	RocksDB - trwała baza danych klucz-wartość dla pamięci Flash i RAM
 Name:		rocksdb
 Version:	6.0.2
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/facebook/rocksdb/releases
@@ -81,11 +81,12 @@ PLATFORM_LDFLAGS="-latomic" \
 	AM_DEFAULT_VERBOSITY=1 \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
-	%{!?with_debug:DEBUG_LEVEL=0}
+	%{!?with_debug:DEBUG_LEVEL=0} \
 	EXTRA_CFLAGS="$(pkg-config --cflags liblz4)" \
 	OPT="%{rpmcflags} %{!?debug:-DNDEBUG}" \
 	PORTABLE=1 \
 	%{!?with_tbb:ROCKSDB_DISABLE_TBB=1} \
+	USE_RTTI=1 \
 	WARNING_FLAGS="%{rpmcppflags} -Wall"
 
 %install
