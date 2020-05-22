@@ -1,0 +1,11 @@
+--- rocksdb-6.8.1/Makefile.orig	2020-05-22 08:04:05.899202286 +0200
++++ rocksdb-6.8.1/Makefile	2020-05-22 08:41:19.037104339 +0200
+@@ -738,7 +738,7 @@
+ shared_all_libobjects = $(shared_libobjects) $(shared-ppc-objects)
+ endif
+ $(SHARED4): $(shared_all_libobjects)
+-	$(CXX) $(PLATFORM_SHARED_LDFLAGS)$(SHARED3) $(CXXFLAGS) $(PLATFORM_SHARED_CFLAGS) $(shared_all_libobjects) $(LDFLAGS) -o $@
++	$(CXX) $(PLATFORM_SHARED_LDFLAGS)$(SHARED3) $(CXXFLAGS) $(PLATFORM_SHARED_CFLAGS) $(shared_all_libobjects) $(LDFLAGS) -o $@ -ldl
+ 
+ endif  # PLATFORM_SHARED_EXT
+ 

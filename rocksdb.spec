@@ -8,18 +8,19 @@
 Summary:	RocksDB: A Persistent Key-Value Store for Flash and RAM Storage
 Summary(pl.UTF-8):	RocksDB - trwała baza danych klucz-wartość dla pamięci Flash i RAM
 Name:		rocksdb
-Version:	6.0.2
-Release:	2
+Version:	6.8.1
+Release:	1
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/facebook/rocksdb/releases
 Source0:	https://github.com/facebook/rocksdb/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	a8f2f594182e97a08629bcc66dfd3fa0
+# Source0-md5:	8648dbe2589748b9dff3c1fe725f210b
 Patch0:		%{name}-libdir.patch
 Patch1:		make-programs.patch
 Patch2:		%{name}-detect-flags.patch
-URL:		http://rocksdb.org/
-BuildRequires:	bzip2-devel >= 1.0.6
+Patch3:		%{name}-link.patch
+URL:		https://rocksdb.org/
+BuildRequires:	bzip2-devel >= 1.0.8
 BuildRequires:	gflags-devel
 # libtcmalloc also supported, but jemalloc is preferred
 BuildRequires:	jemalloc-devel
@@ -27,13 +28,18 @@ BuildRequires:	jemalloc-devel
 BuildRequires:	libatomic-devel
 %endif
 BuildRequires:	libstdc++-devel >= 6:4.7
-BuildRequires:	lz4-devel >= 1:1.8.3
+BuildRequires:	lz4-devel >= 1:1.9.2
 BuildRequires:	numactl-devel
 BuildRequires:	rpmbuild(macros) >= 1.734
-BuildRequires:	snappy-devel >= 1.1.7
+BuildRequires:	snappy-devel >= 1.1.8
 %{?with_tbb:BuildRequires:	tbb-devel}
 BuildRequires:	zlib-devel >= 1.2.11
-BuildRequires:	zstd-devel >= 1.3.7
+BuildRequires:	zstd-devel >= 1.4.4
+Requires:	bzip2 >= 1.0.8
+Requires:	lz4 >= 1:1.9.2
+Requires:	snappy >= 1.1.8
+Requires:	zlib >= 1.2.11
+Requires:	zstd >= 1.4.4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -72,6 +78,7 @@ Statyczna biblioteka RocksDB.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %ifarch i386 i486
@@ -110,7 +117,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS DEFAULT_OPTIONS_HISTORY.md DUMP_FORMAT.md HISTORY.md LANGUAGE-BINDINGS.md LICENSE.leveldb README.md ROCKSDB_LITE.md USERS.md
 %attr(755,root,root) %{_libdir}/librocksdb.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.6.0
+%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.6.8
 
 %files devel
 %defattr(644,root,root,755)
