@@ -2,7 +2,7 @@
 +++ rocksdb-rocksdb-3.10.2/Makefile	2015-08-03 09:54:26.746538265 +0300
 @@ -316,6 +316,8 @@
  
- all: $(LIBRARY) $(PROGRAMS) $(TESTS)
+ all_but_some_tests: $(LIBRARY) $(BENCHMARKS) tools tools_lib test_libs $(SUBSET)
  
 +programs: $(PROGRAMS)
 +
