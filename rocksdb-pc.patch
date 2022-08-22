@@ -1,0 +1,14 @@
+--- rocksdb-6.29.5/Makefile.orig	2022-08-21 08:37:54.772418974 +0200
++++ rocksdb-6.29.5/Makefile	2022-08-21 09:29:36.882280068 +0200
+@@ -2038,9 +2038,9 @@ gen-pc:
+ 	-echo 'Name: rocksdb' >> rocksdb.pc
+ 	-echo 'Description: An embeddable persistent key-value store for fast storage' >> rocksdb.pc
+ 	-echo Version: $(shell ./build_tools/version.sh full) >> rocksdb.pc
+-	-echo 'Libs: -L$${libdir} $(EXEC_LDFLAGS) -lrocksdb' >> rocksdb.pc
++	-echo 'Libs: -L$${libdir} -lrocksdb' >> rocksdb.pc
+ 	-echo 'Libs.private: $(PLATFORM_LDFLAGS)' >> rocksdb.pc
+-	-echo 'Cflags: -I$${includedir} $(PLATFORM_CXXFLAGS)' >> rocksdb.pc
++	-echo 'Cflags: -I$${includedir}' >> rocksdb.pc
+ 	-echo 'Requires: $(subst ",,$(ROCKSDB_PLUGIN_PKGCONFIG_REQUIRES))' >> rocksdb.pc
+ 
+ #-------------------------------------------------
