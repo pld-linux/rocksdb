@@ -111,12 +111,16 @@ export ROCKSDB_DISABLE_BENCHMARK=1
 export ROCKSDB_DISABLE_TBB=1
 %endif
 
+ls -la
+
 %{__make} install \
 	%{!?with_debug:DEBUG_LEVEL=0} \
 	PORTABLE=1 \
 	DESTDIR=$RPM_BUILD_ROOT \
 	PREFIX=%{_prefix} \
 	LIBDIR=%{_libdir}
+
+ls -la
 
 # reduntant symlink
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/librocksdb.so.6
