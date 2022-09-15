@@ -87,10 +87,11 @@ export ROCKSDB_DISABLE_BENCHMARK=1
 export ROCKSDB_DISABLE_TBB=1
 %endif
 
+for target in %{?with_static_libs:static_lib} shared_lib tools_lib tools %{?with_tests:check} ; do
 %ifarch i386 i486
 PLATFORM_LDFLAGS="-latomic" \
 %endif
-%{__make} shared_lib %{?with_static_libs:static_lib} tools tools_lib %{?with_tests:check} \
+%{__make} $target \
 	AM_DEFAULT_VERBOSITY=1 \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
@@ -100,6 +101,7 @@ PLATFORM_LDFLAGS="-latomic" \
 	PORTABLE=1 \
 	USE_RTTI=1 \
 	WARNING_FLAGS="%{rpmcppflags} -Wall"
+done
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -111,16 +113,12 @@ export ROCKSDB_DISABLE_BENCHMARK=1
 export ROCKSDB_DISABLE_TBB=1
 %endif
 
-ls -la
-
 %{__make} install \
 	%{!?with_debug:DEBUG_LEVEL=0} \
 	PORTABLE=1 \
 	DESTDIR=$RPM_BUILD_ROOT \
 	PREFIX=%{_prefix} \
 	LIBDIR=%{_libdir}
-
-ls -la
 
 # reduntant symlink
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/librocksdb.so.6
