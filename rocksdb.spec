@@ -9,13 +9,14 @@
 Summary:	RocksDB: A Persistent Key-Value Store for Flash and RAM Storage
 Summary(pl.UTF-8):	RocksDB - trwała baza danych klucz-wartość dla pamięci Flash i RAM
 Name:		rocksdb
-Version:	6.29.5
+# NOTE: stick to 7.8.x for now; ceph 17.2.5 is not ready for rocksdb 7.10.x (or even 7.9.x?) due to cache changes
+Version:	7.8.3
 Release:	1
 License:	BSD
 Group:		Libraries
 #Source0Download: https://github.com/facebook/rocksdb/releases
 Source0:	https://github.com/facebook/rocksdb/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	be498cd7125f2a38059609469adf147f
+# Source0-md5:	745d3b15e57e31670b5ea607c5bb82ff
 Patch0:		%{name}-detect-flags.patch
 Patch1:		%{name}-pc.patch
 URL:		https://rocksdb.org/
@@ -121,7 +122,7 @@ export ROCKSDB_DISABLE_TBB=1
 	LIBDIR=%{_libdir}
 
 # reduntant symlink
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/librocksdb.so.6
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/librocksdb.so.7
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -133,7 +134,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS DEFAULT_OPTIONS_HISTORY.md DUMP_FORMAT.md HISTORY.md LANGUAGE-BINDINGS.md LICENSE.leveldb README.md ROCKSDB_LITE.md USERS.md
 %attr(755,root,root) %{_libdir}/librocksdb.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.6.29
+%attr(755,root,root) %ghost %{_libdir}/librocksdb.so.7.8
 
 %files devel
 %defattr(644,root,root,755)
